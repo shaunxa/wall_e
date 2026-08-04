@@ -4,6 +4,8 @@ import Vision
 final class FaceMotionController: NSObject, ObservableObject {
     @Published var enabled = false
     @Published private(set) var status = "Face control off"
+    @Published var minimumFaceWidth: CGFloat = 0.20
+    @Published var maximumFaceWidth: CGFloat = 0.40
     var onIntent: ((String) -> Void)?
 
     let session = AVCaptureSession()
@@ -90,10 +92,10 @@ final class FaceMotionController: NSObject, ObservableObject {
 
             let intent: String
             
-            if width > 0.30 {
+            if width > self.maximumFaceWidth {
                 intent = "REV"
                 self.status = "Too close → backing up"
-            } else if width < 0.20 {
+            } else if width < self.minimumFaceWidth {
                 intent = "FWD"
                 self.status = "Too far → move closer"
             } else if centerX < 0.42 {
