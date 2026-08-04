@@ -65,6 +65,30 @@ struct ContentView: View {
             if face.enabled {
                 CameraPreview(session: face.session).frame(width: 180, height: 112).clipShape(RoundedRectangle(cornerRadius: 12))
                 Text(face.status).font(.caption).foregroundStyle(.secondary)
+                DisclosureGroup("Face distance: \(Int(face.minimumFaceWidth * 100))–\(Int(face.maximumFaceWidth * 100))%") {
+                    VStack(spacing: 4) {
+                        Slider(
+                            value: Binding(
+                                get: { Double(face.minimumFaceWidth) },
+                                set: { face.minimumFaceWidth = min(CGFloat($0), face.maximumFaceWidth - 0.05) }
+                            ),
+                            in: 0.10...0.50,
+                            step: 0.05
+                        )
+                        Text("Too far below \(Int(face.minimumFaceWidth * 100))% → move closer")
+                        Slider(
+                            value: Binding(
+                                get: { Double(face.maximumFaceWidth) },
+                                set: { face.maximumFaceWidth = max(CGFloat($0), face.minimumFaceWidth + 0.05) }
+                            ),
+                            in: 0.15...0.60,
+                            step: 0.05
+                        )
+                        Text("Too close above \(Int(face.maximumFaceWidth * 100))% → back away")
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
             }
             Button { speech.toggle() } label: { Label(speech.listening ? "Listening…" : "Voice command", systemImage: speech.listening ? "mic.fill" : "mic") }
                 .buttonStyle(.bordered)
@@ -106,6 +130,7 @@ struct ContentView: View {
             // With the assembled wheel orientation, positive logical drive
             // values move the chassis backward.
             case "REV": robot.drive(35, 35)
+            case "FWD": robot.drive(-35, -35)
             case "HEAD_LEFT": robot.head(-45)
             case "HEAD_RIGHT": robot.head(45)
             default: robot.stop()

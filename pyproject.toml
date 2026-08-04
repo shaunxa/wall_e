@@ -1,0 +1,26 @@
+[project]
+name = "lego-spike-mcp"
+version = "0.1.0"
+description = "A safe local MCP bridge for LEGO Education SPIKE Prime hubs."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "bleak>=0.22,<1",
+  "mcp>=1.0,<2",
+]
+
+[project.scripts]
+lego-spike-mcp = "lego_spike_mcp.server:main"
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lego_spike_mcp"]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
