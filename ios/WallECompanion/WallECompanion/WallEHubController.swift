@@ -11,6 +11,7 @@ final class WallEHubController: NSObject, ObservableObject {
     @Published private(set) var ready = false
     @Published private(set) var status = "Starting Bluetooth…"
     @Published private(set) var telemetry = "Distance — · Reflection — · Touch —"
+    @Published private(set) var wheelsEnabled = true
     @Published private(set) var log: [LogEntry] = []
 
     private var central: CBCentralManager!
@@ -90,8 +91,13 @@ final class WallEHubController: NSObject, ObservableObject {
         } else if line.hasPrefix("SAFE") {
             append("← \(line)", kind: .warning)
             status = "Safety stop: \(line.dropFirst(5))"
+        } else if line.hasPrefix("WHEELS ") {
+            wheelsEnabled = line == "WHEELS ON"
+            append("← \(line)", kind: wheelsEnabled ? .ack : .warning)
         } else if line.hasPrefix("TEL ") {
             telemetry = String(line.dropFirst(4)).replacingOccurrences(of: " ", with: " · ")
+            if line.contains("wheels=0") { wheelsEnabled = false }
+            if line.contains("wheels=1") { wheelsEnabled = true }
         } else {
             append("← \(line)", kind: .info)
         }
@@ -117,6 +123,7 @@ extension WallEHubController: CBCentralManagerDelegate {
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         connected = false; ready = false; commandCharacteristic = nil
+        wheelsEnabled = true
         status = "Disconnected"
     }
 }

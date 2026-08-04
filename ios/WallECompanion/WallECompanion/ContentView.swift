@@ -64,6 +64,11 @@ struct ContentView: View {
                 .onChange(of: face.enabled) { enabled in face.setEnabled(enabled) }
             if face.enabled {
                 CameraPreview(session: face.session).frame(width: 180, height: 112).clipShape(RoundedRectangle(cornerRadius: 12))
+                if !robot.wheelsEnabled {
+                    Label("Wheels disabled — stopped", systemImage: "stop.circle.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.red)
+                }
                 Text(face.status).font(.caption).foregroundStyle(.secondary)
                 DisclosureGroup("Face distance: \(Int(face.minimumFaceWidth * 100))–\(Int(face.maximumFaceWidth * 100))%") {
                     VStack(spacing: 4) {
