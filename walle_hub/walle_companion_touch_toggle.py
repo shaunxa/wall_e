@@ -17,6 +17,11 @@ RIGHT_SIGN = -1
 
 MAX_DRIVE = 55
 HEAD_LIMIT = 60
+# Motor 20T gear drives the 56T head gear: the head turns 20/56 as far as
+# the motor, and one external gear mesh reverses the direction.
+HEAD_MOTOR_TEETH = 20
+HEAD_HEAD_TEETH = 56
+HEAD_SIGN = -1
 OBSTACLE_MM = 180
 COMMAND_TIMEOUT_MS = 2000
 TELEMETRY_INTERVAL_MS = 500
@@ -100,7 +105,8 @@ def handle_command(command):
     if parts[0] == "HEAD" and len(parts) == 2:
         try:
             target = clamp(int(parts[1]), -HEAD_LIMIT, HEAD_LIMIT)
-            head.track_target(target)
+            motor_target = HEAD_SIGN * target * HEAD_HEAD_TEETH // HEAD_MOTOR_TEETH
+            head.track_target(motor_target)
             send("ACK HEAD " + str(target))
         except ValueError:
             send("ERR invalid-head")
@@ -147,7 +153,7 @@ while True:
             distance_eye.distance(),
             color_eye.reflection(),
             int(shoulder_pressed),
-            head.angle(),
+            HEAD_SIGN * head.angle() * HEAD_MOTOR_TEETH // HEAD_HEAD_TEETH,
             int(wheels_enabled),
         ))
 
