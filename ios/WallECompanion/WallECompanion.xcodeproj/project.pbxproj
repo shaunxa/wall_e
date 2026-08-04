@@ -1,0 +1,228 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* WallECompanionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000011 /* WallECompanionApp.swift */; };
+		A10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000012 /* ContentView.swift */; };
+		A10000000000000000000003 /* WallEHubController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000013 /* WallEHubController.swift */; };
+		A10000000000000000000004 /* SpeechController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000014 /* SpeechController.swift */; };
+		A10000000000000000000005 /* FaceMotionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000015 /* FaceMotionController.swift */; };
+		A10000000000000000000006 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000016 /* CameraPreview.swift */; };
+		A10000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000017 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A10000000000000000000010 /* WallECompanion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WallECompanion.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A10000000000000000000011 /* WallECompanionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallECompanionApp.swift; sourceTree = "<group>"; };
+		A10000000000000000000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A10000000000000000000013 /* WallEHubController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallEHubController.swift; sourceTree = "<group>"; };
+		A10000000000000000000014 /* SpeechController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechController.swift; sourceTree = "<group>"; };
+		A10000000000000000000015 /* FaceMotionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceMotionController.swift; sourceTree = "<group>"; };
+		A10000000000000000000016 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		A10000000000000000000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A10000000000000000000018 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000000000000000000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000000000000000000020 = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000021 /* WallECompanion */,
+				A10000000000000000000022 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A10000000000000000000021 /* WallECompanion */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000011 /* WallECompanionApp.swift */,
+				A10000000000000000000012 /* ContentView.swift */,
+				A10000000000000000000013 /* WallEHubController.swift */,
+				A10000000000000000000014 /* SpeechController.swift */,
+				A10000000000000000000015 /* FaceMotionController.swift */,
+				A10000000000000000000016 /* CameraPreview.swift */,
+				A10000000000000000000017 /* Assets.xcassets */,
+				A10000000000000000000018 /* Info.plist */,
+			);
+			path = WallECompanion;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000022 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000010 /* WallECompanion.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A10000000000000000000040 /* WallECompanion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A10000000000000000000050 /* Build configuration list for PBXNativeTarget "WallECompanion" */;
+			buildPhases = (
+				A10000000000000000000031 /* Sources */,
+				A10000000000000000000032 /* Resources */,
+				A10000000000000000000030 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WallECompanion;
+			productName = WallECompanion;
+			productReference = A10000000000000000000010 /* WallECompanion.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000000060 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1700;
+				TargetAttributes = {
+					A10000000000000000000040 = {
+						CreatedOnToolsVersion = 17.0;
+					};
+				};
+			};
+			buildConfigurationList = A10000000000000000000051 /* Build configuration list for PBXProject "WallECompanion" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A10000000000000000000020;
+			productRefGroup = A10000000000000000000022 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A10000000000000000000040 /* WallECompanion */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A10000000000000000000032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000007 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A10000000000000000000031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000000000000000000001 /* WallECompanionApp.swift in Sources */,
+				A10000000000000000000002 /* ContentView.swift in Sources */,
+				A10000000000000000000003 /* WallEHubController.swift in Sources */,
+				A10000000000000000000004 /* SpeechController.swift in Sources */,
+				A10000000000000000000005 /* FaceMotionController.swift in Sources */,
+				A10000000000000000000006 /* CameraPreview.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A10000000000000000000070 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A10000000000000000000071 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A10000000000000000000072 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 68MAC3DL3Z;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WallECompanion/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shaunxa.WallECompanion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		A10000000000000000000073 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 68MAC3DL3Z;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WallECompanion/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shaunxa.WallECompanion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A10000000000000000000050 /* Build configuration list for PBXNativeTarget "WallECompanion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000072 /* Debug */,
+				A10000000000000000000073 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A10000000000000000000051 /* Build configuration list for PBXProject "WallECompanion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A10000000000000000000070 /* Debug */,
+				A10000000000000000000071 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A10000000000000000000060 /* Project object */;
+}
