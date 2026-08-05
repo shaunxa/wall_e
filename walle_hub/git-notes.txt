@@ -1,0 +1,58 @@
+git checkout -b feature/keep-distance-base-on-face-width
+
+
+git add .
+git commit -m "keep the distance based on face width, like 20 - 40% of the camera view and make the range configurable."
+
+git push origin feature/keep-distance-base-on-face-width
+
+
+git checkout main
+git pull origin main
+
+git checkout -b feature/toggle-touch-button-to-disable-wheels
+
+git add .
+git commit -m "make touch sensor as toggle switch to enable or disable wheels"
+
+git push origin feature/toggle-touch-button-to-disable-wheels
+
+
+git checkout main
+git pull origin main
+
+git checkout -b feature/head-turning-gear
+
+git add .
+git commit -m "calibrate the head align with 20T small ->  56T big"
+
+git push origin feature/head-turning-gear
+
+
+git checkout main
+git pull origin main
+
+git checkout -b feature/fun-head-movement-eye-blinking
+
+git add .
+git commit -m "make some fun head movement and eye blinking when wheels stop"
+
+git push origin feature/fun-head-movement-eye-blinking
+
+
+make some fun head movement and eye blinking when wheels stop
+
+After the wheels have stopped for 5 seconds, Wall‑E now:
+Turns its head left slowly over 3 seconds.
+Sweeps right slowly over 5 seconds.
+Returns to its resting head position, then repeats while idle.
+Blinks the sensor eyes.
+Randomly shows a happy (outer ultrasonic LEDs) or sad (inner ultrasonic LEDs) expression after each blink.
+
+cd ~/Documents/Playground_Lego
+git checkout main
+git pull origin main
+
+git checkout -b feature/eyes-exciting-mode
+
+I’ll add a moving “exciting mode”: all four Ultrasonic Sensor LEDs stay on, while the Color Sensor cycles its three RGB segments red → green → blue every second for as long as the wheels are moving.
