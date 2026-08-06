@@ -4,6 +4,7 @@ struct ContentView: View {
     @EnvironmentObject private var robot: WallEHubController
     @StateObject private var face = FaceMotionController()
     @StateObject private var speech = SpeechController()
+    private let wallEMusicURL = URL(string: "https://www.youtube.com/watch?v=OLMffDM7hSI&list=RDOLMffDM7hSI&start_radio=1")!
 
     var body: some View {
         NavigationStack {
@@ -107,6 +108,18 @@ struct ContentView: View {
                 command("Head L", "arrow.turn.up.left") { robot.head(-45) }
                 command("Head R", "arrow.turn.up.right") { robot.head(45) }
             }
+            Link(destination: wallEMusicURL) {
+                Label("Play WALL-E music", systemImage: "music.note")
+                    .frame(maxWidth: .infinity, minHeight: 38)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.purple)
+            .disabled(robot.wheelsEnabled)
+            Text(robot.wheelsEnabled
+                 ? "Disable the wheels at Wall-E's shoulder before playing music."
+                 : "Wall-E is stationary — opens YouTube Music.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .top)
     }
