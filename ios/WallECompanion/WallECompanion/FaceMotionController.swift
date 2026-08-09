@@ -1,4 +1,5 @@
 import AVFoundation
+import UIKit
 import Vision
 
 final class FaceMotionController: NSObject, ObservableObject {
@@ -15,6 +16,8 @@ final class FaceMotionController: NSObject, ObservableObject {
     private var lastIntent = Date.distantPast
     private var lastIntentName = ""
     private var runtimeErrorObserver: NSObjectProtocol?
+    private var videoOutput: AVCaptureVideoDataOutput?
+    private var videoOrientation: AVCaptureVideoOrientation = .portrait
 
     override init() {
         super.init()
@@ -37,6 +40,16 @@ final class FaceMotionController: NSObject, ObservableObject {
 
     func setEnabled(_ enabled: Bool) {
         if enabled { start() } else { stop() }
+    }
+
+    /// Keeps Vision's image coordinates aligned with the on-screen preview.
+    func setInterfaceOrientation(_ interfaceOrientation: UIInterfaceOrientation) {
+        guard let videoOrientation = AVCaptureVideoOrientation(interfaceOrientation) else { return }
+        cameraQueue.async { [weak self] in
+            guard let self else { return }
+            self.videoOrientation = videoOrientation
+            self.videoOutput?.connection(with: .video)?.videoOrientation = videoOrientation
+        }
     }
 
     private func start() {
@@ -75,9 +88,12 @@ final class FaceMotionController: NSObject, ObservableObject {
         output.setSampleBufferDelegate(self, queue: visionQueue)
         guard session.canAddInput(input), session.canAddOutput(output) else { session.commitConfiguration(); return false }
         session.addInput(input); session.addOutput(output)
-        output.connection(with: .video)?.videoOrientation = .portrait
-        output.connection(with: .video)?.isVideoMirrored = true
-        session.commitConfiguration(); configured = true
+        if let connection = output.connection(with: .video) {
+            connection.videoOrientation = videoOrientation
+            connection.automaticallyAdjustsVideoMirroring = false
+            connection.isVideoMirrored = true
+        }
+        session.commitConfiguration(); videoOutput = output; configured = true
         return true
     }
 
