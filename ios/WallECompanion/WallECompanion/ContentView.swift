@@ -1,9 +1,11 @@
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
     @EnvironmentObject private var robot: WallEHubController
     @StateObject private var face = FaceMotionController()
     @StateObject private var speech = SpeechController()
+    @State private var cameraLensIsOnLeft = false
     private let wallEMusicURL = URL(string: "https://www.youtube.com/watch?v=OLMffDM7hSI&list=RDOLMffDM7hSI&start_radio=1")!
 
     var body: some View {
@@ -44,12 +46,18 @@ struct ContentView: View {
             let landscape = geo.size.width > geo.size.height
             Group {
                 if landscape {
-                    HStack(alignment: .top) { controls; telemetryAndLog }
+                    HStack(alignment: .top, spacing: 12) {
+                        if !cameraLensIsOnLeft { faceControlPanel }
+                        robotControlPanel
+                        if cameraLensIsOnLeft { faceControlPanel }
+                    }
                 } else {
-                    VStack(spacing: 12) { controls; telemetryAndLog }
+                    VStack(spacing: 12) { faceControlPanel; robotControlPanel }
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom)
+            .padding(.top, landscape ? 0 : 16)
         }
         .onAppear { bindIntents() }
         .onChange(of: robot.connected) { _ in
@@ -57,20 +65,12 @@ struct ContentView: View {
         }
     }
 
-    private var controls: some View {
+    private var faceControlPanel: some View {
         VStack(spacing: 10) {
-            Label(robot.ready ? "Robot ready" : robot.status, systemImage: robot.ready ? "checkmark.circle.fill" : "hourglass")
-                .foregroundStyle(robot.ready ? .green : .secondary)
+            if face.enabled { facePreview }
             Toggle("Face control", isOn: $face.enabled)
                 .onChange(of: face.enabled) { enabled in face.setEnabled(enabled) }
             if face.enabled {
-                CameraPreview(session: face.session).frame(width: 180, height: 112).clipShape(RoundedRectangle(cornerRadius: 12))
-                if !robot.wheelsEnabled {
-                    Label("Wheels disabled — stopped", systemImage: "stop.circle.fill")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(.red)
-                }
-                Text(face.status).font(.caption).foregroundStyle(.secondary)
                 DisclosureGroup("Face distance: \(Int(face.minimumFaceWidth * 100))–\(Int(face.maximumFaceWidth * 100))%") {
                     VStack(spacing: 4) {
                         Slider(
@@ -96,6 +96,14 @@ struct ContentView: View {
                     .foregroundStyle(.secondary)
                 }
             }
+        }
+        .frame(maxWidth: .infinity, alignment: .top)
+    }
+
+    private var robotControlPanel: some View {
+        VStack(spacing: 10) {
+            robotStatus
+            Text(robot.telemetry).font(.caption).foregroundStyle(.secondary)
             Button { speech.toggle() } label: { Label(speech.listening ? "Listening…" : "Voice command", systemImage: speech.listening ? "mic.fill" : "mic") }
                 .buttonStyle(.bordered)
             Text(speech.transcript).font(.caption).foregroundStyle(.secondary).lineLimit(2)
@@ -124,21 +132,37 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, alignment: .top)
     }
 
-    private var telemetryAndLog: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(robot.telemetry).font(.caption).foregroundStyle(.secondary)
-            Text("COMMAND LOG").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
-            ScrollView { LazyVStack(alignment: .leading, spacing: 6) { ForEach(robot.log) { entry in Text(entry.text).font(.system(.caption, design: .monospaced)).foregroundStyle(color(entry.kind)) } }.frame(maxWidth: .infinity, alignment: .leading).padding(10) }
-                .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
+    private var robotStatus: some View {
+        Label(robot.ready ? "Robot ready" : robot.status, systemImage: robot.ready ? "checkmark.circle.fill" : "hourglass")
+            .foregroundStyle(robot.ready ? .green : .secondary)
+    }
+
+    private var facePreview: some View {
+        VStack(spacing: 10) {
+            CameraPreview(session: face.session, onInterfaceOrientationChange: updateCameraOrientation)
+                .frame(width: 180, height: 112)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            if !robot.wheelsEnabled {
+                Label("Wheels disabled — stopped", systemImage: "stop.circle.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.red)
+            }
+            Text(face.status).font(.caption).foregroundStyle(.secondary)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .frame(width: 180, alignment: .top)
     }
 
     private func command(_ title: String, _ icon: String, _ tint: Color = .blue, action: @escaping () -> Void) -> some View {
         Button(action: action) { Label(title, systemImage: icon).frame(width: 72, height: 38) }.buttonStyle(.borderedProminent).tint(tint).disabled(!robot.connected)
     }
 
-    private func color(_ kind: LogEntry.Kind) -> Color { kind == .ack ? .green : kind == .warning ? .orange : kind == .outgoing ? .primary : .secondary }
+    private func updateCameraOrientation(_ interfaceOrientation: UIInterfaceOrientation) {
+        // In this app's landscape layout, a left-facing interface orientation
+        // puts the front camera lens on the left edge of the device.
+        // Keep the preview on the opposite side of that lens.
+        cameraLensIsOnLeft = interfaceOrientation == .landscapeLeft
+        face.setInterfaceOrientation(interfaceOrientation)
+    }
 
     private func bindIntents() {
         let act: (String) -> Void = { intent in
