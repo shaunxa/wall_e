@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844" role="img" aria-label="Pybricks Remote scan screen">
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844" role="img" aria-label="Wall-E Companion hub scan screen">
   <rect width="390" height="844" fill="#f5f5fa"/>
   <rect x="0" y="0" width="390" height="62" fill="#ffffff"/>
-  <text x="18" y="39" font-family="-apple-system,Arial" font-size="18" font-weight="700" fill="#15151b">Pybricks Remote</text>
+  <text x="18" y="39" font-family="-apple-system,Arial" font-size="18" font-weight="700" fill="#15151b">Wall-E Companion</text>
   <text x="343" y="39" text-anchor="middle" font-family="-apple-system,Arial" font-size="16" font-weight="600" fill="#0879ee">Scan</text>
   <rect x="16" y="82" width="358" height="72" rx="14" fill="#ffffff"/>
   <circle cx="45" cy="118" r="16" fill="#dceeff"/>
@@ -11,7 +11,7 @@
   <text x="350" y="122" text-anchor="middle" font-family="-apple-system,Arial" font-size="24" fill="#9a9aa5">›</text>
   <circle cx="195" cy="300" r="34" fill="#e5e5ec"/>
   <path d="M179 300h32M195 284v32" stroke="#72727d" stroke-width="3" stroke-linecap="round"/>
-  <text x="195" y="360" text-anchor="middle" font-family="-apple-system,Arial" font-size="18" font-weight="700" fill="#15151b">Select a hub to connect</text>
-  <text x="195" y="385" text-anchor="middle" font-family="-apple-system,Arial" font-size="14" fill="#72727d">Turn on the hub and run the Pybricks program.</text>
+  <text x="195" y="360" text-anchor="middle" font-family="-apple-system,Arial" font-size="18" font-weight="700" fill="#15151b">Select Wall-E's hub</text>
+  <text x="195" y="385" text-anchor="middle" font-family="-apple-system,Arial" font-size="14" fill="#72727d">Turn on the hub and start the Wall-E program.</text>
   <rect x="135" y="814" width="120" height="5" rx="3" fill="#15151b"/>
 </svg>
