@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10131a">
+  <title>Wall-E Vision</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #10131a; color: #eef2f7; }
+    main { width: min(96vw, 760px); padding: 1rem; }
+    header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+    h1 { margin: 0 0 .5rem; font-size: 1.35rem; }
+    #status { color: #aeb9c8; font-size: .9rem; white-space: nowrap; }
+    .stream { overflow: hidden; border: 2px solid #2a3444; border-radius: 12px; background: #050607; aspect-ratio: 4 / 3; }
+    img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    p { color: #aeb9c8; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <header><h1>Wall-E Vision</h1><span id="status">Connecting…</span></header>
+    <div class="stream"><img src="/video_feed" alt="Live YOLO object detection camera feed"></div>
+    <p>Live camera inference runs on the Raspberry Pi. Keep the robot in a clear area.</p>
+  </main>
+  <script>
+    const status = document.querySelector('#status');
+    async function updateStatus() {
+      try {
+        const response = await fetch('/health', {cache: 'no-store'});
+        const data = await response.json();
+        status.textContent = data.error ? data.error : `${data.fps.toFixed(1)} FPS · ${data.inference_ms.toFixed(0)} ms`;
+        status.style.color = data.error ? '#ff8a8a' : '#8fe3a2';
+      } catch { status.textContent = 'Connection lost'; status.style.color = '#ff8a8a'; }
+    }
+    updateStatus(); setInterval(updateStatus, 2000);
+  </script>
+</body>
+</html>
