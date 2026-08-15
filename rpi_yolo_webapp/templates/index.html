@@ -15,24 +15,96 @@
     .stream { overflow: hidden; border: 2px solid #2a3444; border-radius: 12px; background: #050607; aspect-ratio: 4 / 3; }
     img { display: block; width: 100%; height: 100%; object-fit: contain; }
     p { color: #aeb9c8; font-size: .9rem; }
+    .panel { margin-top: 1rem; padding: 1rem; border: 1px solid #2a3444; border-radius: 12px; background: #171d27; }
+    .row, .controls { display: flex; gap: .55rem; flex-wrap: wrap; align-items: center; }
+    .controls { justify-content: center; margin-top: .7rem; }
+    button, select { min-height: 2.5rem; padding: .45rem .7rem; border: 0; border-radius: .5rem; font: inherit; }
+    button { background: #3177d1; color: white; font-weight: 650; touch-action: manipulation; }
+    button.stop { background: #bc3f47; } button:disabled { opacity: .45; }
+    select { flex: 1; min-width: 13rem; background: #273244; color: white; }
+    #hub-status, #telemetry, #log { color: #aeb9c8; font-size: .85rem; }
+    #log { display: block; min-height: 1.2rem; margin-top: .5rem; overflow-wrap: anywhere; }
   </style>
 </head>
 <body>
   <main>
     <header><h1>Wall-E Vision</h1><span id="status">Connecting…</span></header>
     <div class="stream"><img src="/video_feed" alt="Live YOLO object detection camera feed"></div>
-    <p>Live camera inference runs on the Raspberry Pi. Keep the robot in a clear area.</p>
+    <section class="panel" aria-label="Pybricks hub controls">
+      <div class="row"><strong>Pybricks Hub</strong><span id="hub-status">Not connected</span></div>
+      <div class="row" style="margin-top:.7rem">
+        <button id="scan">Scan hubs</button>
+        <select id="hubs" aria-label="Nearby Pybricks hubs"><option>Scan to find a hub</option></select>
+        <button id="connect" disabled>Connect</button>
+        <button id="disconnect" disabled>Disconnect</button>
+      </div>
+      <div class="controls">
+        <button data-action="left" disabled>Left</button><button data-action="forward" disabled>Forward</button>
+        <button data-action="right" disabled>Right</button><button class="stop" data-action="stop" disabled>Stop</button>
+        <button data-action="reverse" disabled>Reverse</button><button data-action="head_left" disabled>Head L</button>
+        <button data-action="head_right" disabled>Head R</button>
+      </div>
+      <div id="telemetry">Distance — · Reflection — · Touch —</div>
+      <output id="log"></output>
+    </section>
+    <p>Live camera inference and Bluetooth control run on the Raspberry Pi. Keep the robot in a clear area; Stop before handling it.</p>
   </main>
   <script>
     const status = document.querySelector('#status');
+    const hubStatus = document.querySelector('#hub-status');
+    const telemetry = document.querySelector('#telemetry');
+    const log = document.querySelector('#log');
+    const hubs = document.querySelector('#hubs');
+    const controls = [...document.querySelectorAll('[data-action]')];
+    const connect = document.querySelector('#connect');
+    const disconnect = document.querySelector('#disconnect');
+    function renderHub(hub) {
+      hubStatus.textContent = hub.status;
+      hubStatus.style.color = hub.connected ? '#8fe3a2' : '#aeb9c8';
+      telemetry.textContent = hub.telemetry;
+      log.textContent = hub.log.slice(-3).join('  ');
+      controls.forEach(button => button.disabled = !hub.connected);
+      disconnect.disabled = !hub.connected;
+    }
+    async function post(path, body = {}) {
+      const response = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
     async function updateStatus() {
       try {
         const response = await fetch('/health', {cache: 'no-store'});
         const data = await response.json();
-        status.textContent = data.error ? data.error : `${data.fps.toFixed(1)} FPS · ${data.inference_ms.toFixed(0)} ms`;
-        status.style.color = data.error ? '#ff8a8a' : '#8fe3a2';
+        const camera = data.camera;
+        status.textContent = camera.error ? camera.error : `${camera.fps.toFixed(1)} FPS · ${camera.inference_ms.toFixed(0)} ms`;
+        status.style.color = camera.error ? '#ff8a8a' : '#8fe3a2';
+        renderHub(data.hub);
       } catch { status.textContent = 'Connection lost'; status.style.color = '#ff8a8a'; }
     }
+    document.querySelector('#scan').addEventListener('click', async () => {
+      hubStatus.textContent = 'Scanning…';
+      try {
+        const data = await fetch('/api/hub/scan').then(r => r.json());
+        if (data.error) throw new Error(data.error);
+        hubs.replaceChildren(new Option(data.hubs.length ? 'Select a hub' : 'No Pybricks hub found', ''));
+        data.hubs.forEach(hub => hubs.add(new Option(`${hub.name || 'Pybricks Hub'} (${hub.address})`, hub.address)));
+        connect.disabled = !data.hubs.length;
+      } catch (error) { hubStatus.textContent = `Scan failed: ${error.message}`; }
+    });
+    connect.addEventListener('click', async () => {
+      if (!hubs.value) return;
+      try { renderHub((await post('/api/hub/connect', {address: hubs.value})).hub); }
+      catch (error) { hubStatus.textContent = `Connection failed: ${error.message}`; }
+    });
+    disconnect.addEventListener('click', async () => {
+      try { renderHub((await post('/api/hub/disconnect')).hub); }
+      catch (error) { hubStatus.textContent = `Disconnect failed: ${error.message}`; }
+    });
+    controls.forEach(button => button.addEventListener('click', async () => {
+      try { renderHub((await post('/api/hub/command', {action: button.dataset.action})).hub); }
+      catch (error) { hubStatus.textContent = `Command failed: ${error.message}`; }
+    }));
     updateStatus(); setInterval(updateStatus, 2000);
   </script>
 </body>

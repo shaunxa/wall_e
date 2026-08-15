@@ -9,19 +9,26 @@ not open /dev/video0 again or double the inference load.
 from __future__ import annotations
 
 import atexit
+import asyncio
 import logging
 import os
 import threading
 import time
 from dataclasses import dataclass
+from typing import Any
 
 import cv2
-from flask import Flask, Response, jsonify, render_template
+from bleak import BleakClient, BleakScanner
+from flask import Flask, Response, jsonify, render_template, request
 from ultralytics import YOLO
 
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
 LOG = logging.getLogger(__name__)
+
+# Pybricks command/event GATT service used by the existing Wall-E hub program.
+PYBRICKS_SERVICE_UUID = "c5f50001-8280-46da-89f4-6d8051e4aeef"
+PYBRICKS_COMMAND_UUID = "c5f50002-8280-46da-89f4-6d8051e4aeef"
 
 
 @dataclass
@@ -29,6 +36,147 @@ class StreamStatus:
     fps: float = 0.0
     inference_ms: float = 0.0
     error: str | None = None
+
+
+class PybricksBridge:
+    """Own one asynchronous Bleak connection for the Flask application."""
+
+    def __init__(self) -> None:
+        self._loop = asyncio.new_event_loop()
+        self._thread = threading.Thread(target=self._run_loop, name="pybricks-ble", daemon=True)
+        self._thread.start()
+        self._client: BleakClient | None = None
+        self._lock = threading.Lock()
+        self._stdout = bytearray()
+        self._state: dict[str, Any] = {
+            "connected": False, "ready": False, "name": None, "address": None,
+            "status": "Not connected", "telemetry": "Distance — · Reflection — · Touch —",
+            "wheels_enabled": True, "log": [],
+        }
+
+    def _run_loop(self) -> None:
+        asyncio.set_event_loop(self._loop)
+        self._loop.run_forever()
+
+    def _call(self, coroutine: Any, timeout: float = 20) -> Any:
+        return asyncio.run_coroutine_threadsafe(coroutine, self._loop).result(timeout=timeout)
+
+    def _update(self, **values: Any) -> None:
+        with self._lock:
+            self._state.update(values)
+
+    def _append_log(self, text: str) -> None:
+        with self._lock:
+            self._state["log"] = [*self._state["log"], text][-80:]
+
+    def status(self) -> dict[str, Any]:
+        with self._lock:
+            return {**self._state, "log": list(self._state["log"])}
+
+    def scan(self) -> list[dict[str, str | int | None]]:
+        return self._call(self._scan())
+
+    async def _scan(self) -> list[dict[str, str | int | None]]:
+        devices = await BleakScanner.discover(timeout=5.0, return_adv=True)
+        hubs: list[dict[str, str | int | None]] = []
+        for device, advertisement in devices.values():
+            service_uuids = {uuid.lower() for uuid in (advertisement.service_uuids or [])}
+            if PYBRICKS_SERVICE_UUID not in service_uuids:
+                continue
+            hubs.append({"name": device.name or advertisement.local_name, "address": device.address,
+                         "rssi": getattr(advertisement, "rssi", None)})
+        return sorted(hubs, key=lambda hub: (hub["name"] or "", hub["address"] or ""))
+
+    def connect(self, address: str) -> dict[str, Any]:
+        self._call(self._connect(address))
+        return self.status()
+
+    async def _connect(self, address: str) -> None:
+        await self._disconnect()
+        self._update(status="Connecting…")
+        client = BleakClient(address, disconnected_callback=self._on_disconnect)
+        await client.connect(timeout=15.0)
+        try:
+            characteristics = {char.uuid.lower() for service in client.services for char in service.characteristics}
+            if PYBRICKS_COMMAND_UUID not in characteristics:
+                raise ValueError("The device does not expose the Pybricks command characteristic")
+            await client.start_notify(PYBRICKS_COMMAND_UUID, self._on_notification)
+        except Exception:
+            await client.disconnect()
+            raise
+        self._client = client
+        self._stdout.clear()
+        self._update(connected=True, ready=False, name=getattr(client, "name", None), address=address,
+                     status="Connected — start the Pybricks program", telemetry="Distance — · Reflection — · Touch —",
+                     wheels_enabled=True, log=[])
+
+    def disconnect(self) -> dict[str, Any]:
+        self._call(self._disconnect())
+        return self.status()
+
+    async def _disconnect(self) -> None:
+        client, self._client = self._client, None
+        if client and client.is_connected:
+            try:
+                await client.stop_notify(PYBRICKS_COMMAND_UUID)
+            except Exception:
+                pass
+            await client.disconnect()
+        self._update(connected=False, ready=False, name=None, address=None, status="Not connected", wheels_enabled=True)
+
+    def command(self, action: str) -> dict[str, Any]:
+        commands = {"stop": "STOP", "left": "DRV 35 -35", "right": "DRV -35 35",
+                    "forward": "DRV -35 -35", "reverse": "DRV 35 35",
+                    "head_left": "HEAD -45", "head_right": "HEAD 45"}
+        if action not in commands:
+            raise ValueError("Unsupported action")
+        self._call(self._send(commands[action]))
+        return self.status()
+
+    async def _send(self, command: str) -> None:
+        if not self._client or not self._client.is_connected:
+            raise RuntimeError("Hub is not connected")
+        # 0x06 directs following bytes to the running Pybricks program's stdin.
+        await self._client.write_gatt_char(PYBRICKS_COMMAND_UUID, b"\x06" + (command + "\n").encode(), response=True)
+        self._append_log(f"→ {command}")
+
+    def _on_notification(self, _sender: Any, data: bytearray) -> None:
+        if data and data[0] == 0x01:
+            self._stdout.extend(data[1:])
+            while b"\n" in self._stdout:
+                raw_line, _, remainder = self._stdout.partition(b"\n")
+                self._stdout = bytearray(remainder)
+                self._handle_line(raw_line.decode("utf-8", errors="replace").strip())
+
+    def _handle_line(self, line: str) -> None:
+        if not line:
+            return
+        self._append_log(f"← {line}")
+        if line == "READY":
+            self._update(ready=True, status="Connected — robot ready")
+        elif line.startswith("SAFE "):
+            self._update(status=f"Safety stop: {line[5:]}")
+        elif line == "WHEELS OFF":
+            self._update(wheels_enabled=False)
+        elif line == "WHEELS ON":
+            self._update(wheels_enabled=True)
+        elif line.startswith("TEL "):
+            enabled = self.status()["wheels_enabled"]
+            if "wheels=" in line:
+                enabled = "wheels=0" not in line
+            self._update(telemetry=line[4:].replace(" ", " · "), wheels_enabled=enabled)
+
+    def _on_disconnect(self, _client: BleakClient) -> None:
+        self._client = None
+        self._update(connected=False, ready=False, name=None, address=None, status="Disconnected", wheels_enabled=True)
+
+    def stop(self) -> None:
+        try:
+            self.disconnect()
+        except Exception:
+            LOG.exception("Could not close Pybricks BLE connection")
+        self._loop.call_soon_threadsafe(self._loop.stop)
+        self._thread.join(timeout=3)
 
 
 class CameraWorker:
@@ -134,8 +282,10 @@ def create_app() -> Flask:
         height=int(os.getenv("CAMERA_HEIGHT", "480")),
         model_path=os.getenv("YOLO_MODEL", "yolov8n.pt"),
     )
+    bridge = PybricksBridge()
     worker.start()
     atexit.register(worker.stop)
+    atexit.register(bridge.stop)
 
     @app.get("/")
     def index():
@@ -148,7 +298,46 @@ def create_app() -> Flask:
     @app.get("/health")
     def health():
         status = worker.status()
-        return jsonify(status.__dict__), 503 if status.error else 200
+        return jsonify(camera=status.__dict__, hub=bridge.status()), 503 if status.error else 200
+
+    @app.get("/api/hub/scan")
+    def scan_hubs():
+        try:
+            return jsonify(hubs=bridge.scan())
+        except Exception as exc:
+            LOG.exception("Pybricks BLE scan failed")
+            return jsonify(error=str(exc)), 503
+
+    @app.post("/api/hub/connect")
+    def connect_hub():
+        address = (request.get_json(silent=True) or {}).get("address")
+        if not isinstance(address, str) or not address:
+            return jsonify(error="A hub BLE address is required"), 400
+        try:
+            return jsonify(hub=bridge.connect(address))
+        except Exception as exc:
+            LOG.exception("Pybricks BLE connection failed")
+            return jsonify(error=str(exc)), 503
+
+    @app.post("/api/hub/disconnect")
+    def disconnect_hub():
+        try:
+            return jsonify(hub=bridge.disconnect())
+        except Exception as exc:
+            return jsonify(error=str(exc)), 503
+
+    @app.post("/api/hub/command")
+    def hub_command():
+        action = (request.get_json(silent=True) or {}).get("action")
+        if not isinstance(action, str):
+            return jsonify(error="An action is required"), 400
+        try:
+            return jsonify(hub=bridge.command(action))
+        except ValueError as exc:
+            return jsonify(error=str(exc)), 400
+        except Exception as exc:
+            LOG.warning("Hub command failed: %s", exc)
+            return jsonify(error=str(exc)), 503
 
     return app
 
