@@ -31,6 +31,10 @@ In landscape orientation, the page uses two horizontal panels:
 
 Portrait mode stacks the panels for easier reading on a narrow phone.
 
+![Landscape web control deck: live video on the left and the compact control panel on the right](images/rpi-web-control-landscape.jpg)
+
+![Portrait web control deck: video/status panel above the controls](images/rpi-web-control-portrait.jpg)
+
 ### Video status strip
 
 The strip below the video shows:
