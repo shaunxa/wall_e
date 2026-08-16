@@ -19,7 +19,15 @@
     .drive-grid { display:grid; grid-template-columns:1fr 1.08fr 1fr; grid-template-rows:3.4rem 3.4rem 3.4rem; gap:.38rem; max-width:300px; margin:1rem auto .75rem; } .drive-grid button { font-size:1rem; } .drive-grid .forward { grid-column:2; } .drive-grid .left { grid-row:2; } .drive-grid .stop { grid-column:2; grid-row:2; } .drive-grid .right { grid-column:3; grid-row:2; } .drive-grid .reverse { grid-column:2; grid-row:3; }
     .head-row { display:flex; justify-content:space-between; color:var(--muted); font-size:.84rem; } #head-angle { color:var(--cyan); font-weight:800; } input[type=range] { width:100%; accent-color:var(--cyan); margin:.6rem 0 .2rem; } .tick-row { display:flex; justify-content:space-between; color:var(--muted); font-size:.74rem; }
     .actions { display:grid; grid-template-columns:repeat(2,1fr); gap:.45rem; margin-top:.75rem; } .telemetry { margin-top:1rem; padding:.75rem; border-radius:10px; background:#0b1d27; color:var(--muted); font-size:.86rem; min-height:2.8rem; } output { display:block; min-height:2.6rem; max-height:5rem; overflow:auto; margin-top:.65rem; color:#b4ced7; font: .75rem ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere; }
-    footer { margin-top:1rem; color:var(--muted); font-size:.8rem; } kbd { padding:.08rem .28rem; border:1px solid var(--line); border-radius:4px; color:var(--ink); } @media (max-width:760px) { main { padding:1rem; } .layout { grid-template-columns:1fr; } header { align-items:flex-start; flex-direction:column; } #camera-status { text-align:left; } }
+    footer { margin-top:1rem; color:var(--muted); font-size:.8rem; } kbd { padding:.08rem .28rem; border:1px solid var(--line); border-radius:4px; color:var(--ink); }
+    @media (orientation:landscape) and (max-height:700px) {
+      body { overflow:hidden; } main { width:100%; height:100dvh; padding:.55rem clamp(.7rem,2vw,1.4rem); display:flex; flex-direction:column; } header { margin-bottom:.45rem; } h1 { font-size:1.25rem; } #camera-status { font-size:.78rem; }
+      .layout { grid-template-columns:minmax(0,1.35fr) minmax(320px,.95fr); flex:1; min-height:0; gap:.7rem; } .layout > .card:first-child { display:grid; grid-template-rows:auto minmax(0,1fr) auto; } .card { min-height:0; border-radius:13px; }
+      .card-head { padding:.55rem .75rem; } .stream { min-height:0; aspect-ratio:auto; } .stream-badge { top:.45rem; left:.45rem; } .camera-note { padding:.4rem .75rem; font-size:.72rem; }
+      .control-card { overflow-y:auto; padding:.7rem; } .connection { gap:.4rem; } select, button { min-height:2.25rem; } .hub-state { margin:.55rem 0 .35rem; padding:.45rem .55rem; } .drive-grid { grid-template-rows:2.45rem 2.45rem 2.45rem; gap:.25rem; margin:.45rem auto; }
+      input[type=range] { margin:.3rem 0 .1rem; } .actions { gap:.3rem; margin-top:.45rem; } .telemetry { margin-top:.55rem; padding:.5rem; min-height:0; } output { min-height:1.2rem; max-height:2.5rem; margin-top:.35rem; } footer { display:none; }
+    }
+    @media (max-width:760px) and (orientation:portrait) { main { padding:1rem; } .layout { grid-template-columns:1fr; } header { align-items:flex-start; flex-direction:column; } #camera-status { text-align:left; } }
   </style>
 </head>
 <body>
