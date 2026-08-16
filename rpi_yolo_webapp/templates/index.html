@@ -22,7 +22,7 @@
     footer { margin-top:1rem; color:var(--muted); font-size:.8rem; } kbd { padding:.08rem .28rem; border:1px solid var(--line); border-radius:4px; color:var(--ink); }
     @media (orientation:landscape) and (max-height:700px) {
       body { overflow:hidden; } main { width:100%; height:100dvh; padding:.55rem clamp(.7rem,2vw,1.4rem); display:flex; flex-direction:column; } #camera-status { font-size:.72rem; }
-      .layout { grid-template-columns:minmax(0,1.35fr) minmax(300px,.9fr); flex:1; min-height:0; gap:.7rem; } .layout > .card:first-child { display:grid; grid-template-rows:auto minmax(0,1fr) auto auto; } .card { min-height:0; border-radius:13px; }
+      .layout { grid-template-columns:minmax(0,1.35fr) minmax(300px,.9fr); flex:1; min-height:0; gap:.7rem; align-items:stretch; } .layout > .card:first-child { display:grid; grid-template-rows:auto minmax(0,1fr) auto auto; } .card { min-height:0; border-radius:13px; }
       .card-head { padding:.55rem .75rem; } .stream { min-height:0; aspect-ratio:auto; } .stream-badge { top:.45rem; left:.45rem; } .video-meta { gap:.35rem; padding:.38rem .65rem; } .meta-block { font-size:.68rem; } .meta-block strong { font-size:.76rem; } .meta-label { font-size:.58rem; } .command-block output { max-height:1.7rem; font-size:.62rem; }.camera-note { padding:.32rem .65rem; font-size:.66rem; }
       .control-card { overflow-y:auto; padding:.65rem; } .connection { gap:.4rem; } select, button { min-height:2.15rem; } .drive-grid { grid-template-rows:2.25rem 2.25rem 2.25rem; gap:.22rem; margin:.35rem auto; }
       input[type=range] { margin:.25rem 0 .05rem; } .actions { gap:.28rem; margin-top:.35rem; } footer { display:none; }
