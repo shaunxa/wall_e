@@ -3,109 +3,56 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10131a">
-  <title>Wall-E Vision</title>
+  <meta name="theme-color" content="#07131d">
+  <title>Wall‑E Control Deck</title>
   <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #10131a; color: #eef2f7; }
-    main { width: min(96vw, 760px); padding: 1rem; }
-    header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-    h1 { margin: 0 0 .5rem; font-size: 1.35rem; }
-    #status { color: #aeb9c8; font-size: .9rem; white-space: nowrap; }
-    .stream { overflow: hidden; border: 2px solid #2a3444; border-radius: 12px; background: #050607; aspect-ratio: 4 / 3; }
-    img { display: block; width: 100%; height: 100%; object-fit: contain; }
-    p { color: #aeb9c8; font-size: .9rem; }
-    .panel { margin-top: 1rem; padding: 1rem; border: 1px solid #2a3444; border-radius: 12px; background: #171d27; }
-    .row, .controls { display: flex; gap: .55rem; flex-wrap: wrap; align-items: center; }
-    .controls { justify-content: center; margin-top: .7rem; }
-    button, select { min-height: 2.5rem; padding: .45rem .7rem; border: 0; border-radius: .5rem; font: inherit; }
-    button { background: #3177d1; color: white; font-weight: 650; touch-action: manipulation; }
-    button.stop { background: #bc3f47; } button:disabled { opacity: .45; }
-    select { flex: 1; min-width: 13rem; background: #273244; color: white; }
-    #hub-status, #telemetry, #log { color: #aeb9c8; font-size: .85rem; }
-    #log { display: block; min-height: 1.2rem; margin-top: .5rem; overflow-wrap: anywhere; }
+    :root { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color-scheme: dark; --ink:#e9f5f8; --muted:#9db6bf; --line:#2a5362; --cyan:#62cfef; --ok:#8ae0a4; }
+    * { box-sizing: border-box; } body { margin:0; min-height:100vh; color:var(--ink); background:radial-gradient(circle at top, #163d4d, #07131d 55%); }
+    main { width:min(1180px, 100%); margin:auto; padding:clamp(1rem,3vw,2.5rem); } header { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+    h1 { margin:0; font-size:clamp(1.35rem,3vw,2rem); letter-spacing:.02em; } .eyebrow { color:var(--cyan); font-size:.75rem; font-weight:800; letter-spacing:.13em; text-transform:uppercase; } #camera-status { color:var(--muted); font-size:.9rem; text-align:right; }
+    .layout { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(320px,.8fr); gap:1rem; align-items:start; } .card { border:1px solid var(--line); border-radius:18px; background:linear-gradient(145deg,rgba(20,51,63,.94),rgba(9,27,36,.96)); box-shadow:0 14px 36px rgba(0,0,0,.2); overflow:hidden; }
+    .card-head { display:flex; justify-content:space-between; gap:1rem; padding:1rem 1rem .75rem; align-items:baseline; } h2 { margin:0; font-size:1rem; } .label { color:var(--muted); font-size:.82rem; }
+    .stream { aspect-ratio:4/3; background:#020607; border-block:1px solid var(--line); position:relative; } .stream img { width:100%; height:100%; display:block; object-fit:contain; } .stream-badge { position:absolute; top:.75rem; left:.75rem; padding:.3rem .55rem; border-radius:999px; background:rgba(4,20,28,.8); color:var(--cyan); font-size:.76rem; font-weight:700; }
+    .camera-note { margin:0; padding:.7rem 1rem; color:var(--muted); font-size:.82rem; }.control-card { padding:1rem; }.connection { display:grid; grid-template-columns:1fr auto; gap:.55rem; }
+    select, button, input { font:inherit; } select, button { min-height:2.7rem; border-radius:10px; border:1px solid var(--line); } select { width:100%; padding:.4rem .65rem; color:var(--ink); background:#0d202a; } button { padding:.5rem .75rem; cursor:pointer; color:var(--ink); background:linear-gradient(#259fc6,#167c9d); font-weight:750; touch-action:manipulation; } button:hover:not(:disabled) { filter:brightness(1.12); } button:disabled { opacity:.4; cursor:not-allowed; } button.quiet { background:#17323d; } button.danger { background:linear-gradient(#db5b68,#a73d49); }
+    .hub-state { display:flex; align-items:center; justify-content:space-between; gap:.6rem; margin:1rem 0 .5rem; padding:.7rem; border-radius:10px; background:#0b1d27; } #hub-status { color:var(--muted); font-size:.88rem; text-align:right; }
+    .drive-grid { display:grid; grid-template-columns:1fr 1.08fr 1fr; grid-template-rows:3.4rem 3.4rem 3.4rem; gap:.38rem; max-width:300px; margin:1rem auto .75rem; } .drive-grid button { font-size:1rem; } .drive-grid .forward { grid-column:2; } .drive-grid .left { grid-row:2; } .drive-grid .stop { grid-column:2; grid-row:2; } .drive-grid .right { grid-column:3; grid-row:2; } .drive-grid .reverse { grid-column:2; grid-row:3; }
+    .head-row { display:flex; justify-content:space-between; color:var(--muted); font-size:.84rem; } #head-angle { color:var(--cyan); font-weight:800; } input[type=range] { width:100%; accent-color:var(--cyan); margin:.6rem 0 .2rem; } .tick-row { display:flex; justify-content:space-between; color:var(--muted); font-size:.74rem; }
+    .actions { display:grid; grid-template-columns:repeat(2,1fr); gap:.45rem; margin-top:.75rem; } .telemetry { margin-top:1rem; padding:.75rem; border-radius:10px; background:#0b1d27; color:var(--muted); font-size:.86rem; min-height:2.8rem; } output { display:block; min-height:2.6rem; max-height:5rem; overflow:auto; margin-top:.65rem; color:#b4ced7; font: .75rem ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere; }
+    footer { margin-top:1rem; color:var(--muted); font-size:.8rem; } kbd { padding:.08rem .28rem; border:1px solid var(--line); border-radius:4px; color:var(--ink); } @media (max-width:760px) { main { padding:1rem; } .layout { grid-template-columns:1fr; } header { align-items:flex-start; flex-direction:column; } #camera-status { text-align:left; } }
   </style>
 </head>
 <body>
   <main>
-    <header><h1>Wall-E Vision</h1><span id="status">Connecting…</span></header>
-    <div class="stream"><img src="/video_feed" alt="Live YOLO object detection camera feed"></div>
-    <section class="panel" aria-label="Pybricks hub controls">
-      <div class="row"><strong>Pybricks Hub</strong><span id="hub-status">Not connected</span></div>
-      <div class="row" style="margin-top:.7rem">
-        <button id="scan">Scan hubs</button>
-        <select id="hubs" aria-label="Nearby Pybricks hubs"><option>Scan to find a hub</option></select>
-        <button id="connect" disabled>Connect</button>
-        <button id="disconnect" disabled>Disconnect</button>
-      </div>
-      <div class="controls">
-        <button data-action="left" disabled>Left</button><button data-action="forward" disabled>Forward</button>
-        <button data-action="right" disabled>Right</button><button class="stop" data-action="stop" disabled>Stop</button>
-        <button data-action="reverse" disabled>Reverse</button><button data-action="head_left" disabled>Head L</button>
-        <button data-action="head_right" disabled>Head R</button>
-      </div>
-      <div id="telemetry">Distance — · Reflection — · Touch —</div>
-      <output id="log"></output>
-    </section>
-    <p>Live camera inference and Bluetooth control run on the Raspberry Pi. Keep the robot in a clear area; Stop before handling it.</p>
+    <header><div><div class="eyebrow">Raspberry Pi 4 · BLE GATT client</div><h1>Wall‑E Control Deck</h1></div><div id="camera-status" aria-live="polite">Starting camera…</div></header>
+    <div class="layout">
+      <section class="card" aria-label="Video stream"><div class="card-head"><h2>Live video stream</h2><span class="label">YOLOv8n tracking</span></div><div class="stream"><img src="/video_feed" alt="Live annotated camera feed from Wall-E"><span class="stream-badge">● LIVE</span></div><p class="camera-note">One camera and inference worker run on the Pi; every connected browser receives the latest annotated frame.</p></section>
+      <section class="card control-card" aria-label="Robot controls">
+        <div class="eyebrow">Pybricks hub</div><div class="connection" style="margin-top:.35rem"><select id="hubs" aria-label="Nearby Pybricks hubs"><option value="">Scan to find a hub</option></select><button id="scan" class="quiet">Scan</button></div><div class="connection" style="margin-top:.45rem"><button id="connect" disabled>Connect</button><button id="disconnect" class="quiet" disabled>Disconnect</button></div>
+        <div class="hub-state"><strong>Robot state</strong><span id="hub-status">Not connected</span></div><div class="eyebrow">Drive joystick</div>
+        <div class="drive-grid" aria-label="Hold a direction to drive; release to stop"><button class="forward drive" data-action="forward" disabled aria-label="Drive forward">▲</button><button class="left drive" data-action="left" disabled aria-label="Turn left">◀</button><button class="stop danger" data-action="stop" disabled>STOP</button><button class="right drive" data-action="right" disabled aria-label="Turn right">▶</button><button class="reverse drive" data-action="reverse" disabled aria-label="Drive reverse">▼</button></div>
+        <div class="head-row"><span>Head angle</span><span id="head-angle">0°</span></div><input id="head" type="range" min="-45" max="45" value="0" step="1" disabled aria-label="Head angle from minus 45 to 45 degrees"><div class="tick-row"><span>−45°</span><span>0°</span><span>45°</span></div>
+        <div class="actions"><button class="quiet utility" data-action="ping" disabled>Ping hub</button><button class="quiet utility" data-action="echo" disabled>Echo test</button><button class="quiet utility" data-action="eyes_awake" disabled>Eyes awake</button><button class="quiet utility" data-action="eyes_off" disabled>Eyes off</button></div>
+        <div id="telemetry" class="telemetry">Distance — · Reflection — · Touch —</div><output id="log" aria-live="polite"></output>
+      </section>
+    </div>
+    <footer>Hold a directional control to move; release it to send Stop. Keyboard: <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>; <kbd>Space</kbd> stops. Keep the robot clear before enabling movement.</footer>
   </main>
   <script>
-    const status = document.querySelector('#status');
-    const hubStatus = document.querySelector('#hub-status');
-    const telemetry = document.querySelector('#telemetry');
-    const log = document.querySelector('#log');
-    const hubs = document.querySelector('#hubs');
-    const controls = [...document.querySelectorAll('[data-action]')];
-    const connect = document.querySelector('#connect');
-    const disconnect = document.querySelector('#disconnect');
-    function renderHub(hub) {
-      hubStatus.textContent = hub.status;
-      hubStatus.style.color = hub.connected ? '#8fe3a2' : '#aeb9c8';
-      telemetry.textContent = hub.telemetry;
-      log.textContent = hub.log.slice(-3).join('  ');
-      controls.forEach(button => button.disabled = !hub.connected);
-      disconnect.disabled = !hub.connected;
-    }
-    async function post(path, body = {}) {
-      const response = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Request failed');
-      return data;
-    }
-    async function updateStatus() {
-      try {
-        const response = await fetch('/health', {cache: 'no-store'});
-        const data = await response.json();
-        const camera = data.camera;
-        status.textContent = camera.error ? camera.error : `${camera.fps.toFixed(1)} FPS · ${camera.inference_ms.toFixed(0)} ms`;
-        status.style.color = camera.error ? '#ff8a8a' : '#8fe3a2';
-        renderHub(data.hub);
-      } catch { status.textContent = 'Connection lost'; status.style.color = '#ff8a8a'; }
-    }
-    document.querySelector('#scan').addEventListener('click', async () => {
-      hubStatus.textContent = 'Scanning…';
-      try {
-        const data = await fetch('/api/hub/scan').then(r => r.json());
-        if (data.error) throw new Error(data.error);
-        hubs.replaceChildren(new Option(data.hubs.length ? 'Select a hub' : 'No Pybricks hub found', ''));
-        data.hubs.forEach(hub => hubs.add(new Option(`${hub.name || 'Pybricks Hub'} (${hub.address})`, hub.address)));
-        connect.disabled = !data.hubs.length;
-      } catch (error) { hubStatus.textContent = `Scan failed: ${error.message}`; }
-    });
-    connect.addEventListener('click', async () => {
-      if (!hubs.value) return;
-      try { renderHub((await post('/api/hub/connect', {address: hubs.value})).hub); }
-      catch (error) { hubStatus.textContent = `Connection failed: ${error.message}`; }
-    });
-    disconnect.addEventListener('click', async () => {
-      try { renderHub((await post('/api/hub/disconnect')).hub); }
-      catch (error) { hubStatus.textContent = `Disconnect failed: ${error.message}`; }
-    });
-    controls.forEach(button => button.addEventListener('click', async () => {
-      try { renderHub((await post('/api/hub/command', {action: button.dataset.action})).hub); }
-      catch (error) { hubStatus.textContent = `Command failed: ${error.message}`; }
-    }));
-    updateStatus(); setInterval(updateStatus, 2000);
+    const cameraStatus=document.querySelector('#camera-status'),hubStatus=document.querySelector('#hub-status'),telemetry=document.querySelector('#telemetry'),log=document.querySelector('#log'),hubs=document.querySelector('#hubs'),connect=document.querySelector('#connect'),disconnect=document.querySelector('#disconnect'),head=document.querySelector('#head'),headAngle=document.querySelector('#head-angle');
+    const driveButtons=[...document.querySelectorAll('.drive')],utilityButtons=[...document.querySelectorAll('.utility')]; let driveTimer=null,activeDrive=null,headTimer=null,motionBusy=false;
+    async function post(path,body={}){const r=await fetch(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Request failed');return data;}
+    function renderHub(hub){const ready=Boolean(hub.ready);hubStatus.textContent=hub.status;hubStatus.style.color=hub.connected?(ready?'var(--ok)':'var(--cyan)'):'var(--muted)';telemetry.textContent=hub.telemetry;log.textContent=hub.log.slice(-5).join('\n');driveButtons.filter(b=>b.dataset.action!=='stop').forEach(b=>b.disabled=!ready);utilityButtons.forEach(b=>b.disabled=!ready);head.disabled=!ready;document.querySelector('[data-action="stop"]').disabled=!hub.connected;disconnect.disabled=!hub.connected;}
+    async function action(name){try{renderHub((await post('/api/hub/command',{action:name})).hub);}catch(e){hubStatus.textContent=`Command failed: ${e.message}`;}}
+    async function motion(name){if(motionBusy)return;motionBusy=true;try{await action(name);}finally{motionBusy=false;}}
+    async function stopDrive(){if(!activeDrive&&!driveTimer&&!motionBusy)return;activeDrive=null;clearInterval(driveTimer);driveTimer=null;while(motionBusy)await new Promise(resolve=>setTimeout(resolve,20));await action('stop');}
+    async function startDrive(name){if(activeDrive===name)return;await stopDrive();activeDrive=name;await motion(name);if(activeDrive===name)driveTimer=setInterval(()=>{if(activeDrive===name)motion(name);},400);}
+    async function refresh(){try{const r=await fetch('/health',{cache:'no-store'});const data=await r.json();cameraStatus.textContent=data.camera.error?data.camera.error:`${data.camera.fps.toFixed(1)} FPS · ${data.camera.inference_ms.toFixed(0)} ms`;cameraStatus.style.color=data.camera.error?'#ff99a0':'var(--ok)';renderHub(data.hub);}catch{cameraStatus.textContent='Pi connection lost';cameraStatus.style.color='#ff99a0';}}
+    document.querySelector('#scan').addEventListener('click',async()=>{hubStatus.textContent='Scanning…';try{const r=await fetch('/api/hub/scan');const data=await r.json();if(!r.ok)throw new Error(data.error);hubs.replaceChildren(new Option(data.hubs.length?'Select a Pybricks hub':'No Pybricks hub found',''));data.hubs.forEach(h=>hubs.add(new Option(`${h.name||'Pybricks Hub'} (${h.address})`,h.address)));connect.disabled=!data.hubs.length;}catch(e){hubStatus.textContent=`Scan failed: ${e.message}`;}});
+    connect.addEventListener('click',async()=>{if(!hubs.value)return;try{renderHub((await post('/api/hub/connect',{address:hubs.value})).hub);}catch(e){hubStatus.textContent=`Connection failed: ${e.message}`;}});disconnect.addEventListener('click',async()=>{await stopDrive();try{renderHub((await post('/api/hub/disconnect')).hub);}catch(e){hubStatus.textContent=`Disconnect failed: ${e.message}`;}});
+    driveButtons.forEach(b=>{if(b.dataset.action==='stop')b.addEventListener('click',()=>{activeDrive=true;stopDrive();});else{b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture?.(e.pointerId);startDrive(b.dataset.action);});['pointerup','pointercancel','pointerleave'].forEach(type=>b.addEventListener(type,stopDrive));}});utilityButtons.forEach(b=>b.addEventListener('click',()=>action(b.dataset.action)));
+    head.addEventListener('input',()=>{headAngle.textContent=`${head.value}°`;clearTimeout(headTimer);headTimer=setTimeout(async()=>{try{renderHub((await post('/api/hub/head',{angle:Number(head.value)})).hub);}catch(e){hubStatus.textContent=`Head failed: ${e.message}`;}},160);});
+    const keyAction={ArrowUp:'forward',ArrowDown:'reverse',ArrowLeft:'left',ArrowRight:'right'};window.addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();activeDrive=true;stopDrive();}else if(keyAction[e.key]&&!e.repeat){e.preventDefault();startDrive(keyAction[e.key]);}});window.addEventListener('keyup',e=>{if(keyAction[e.key])stopDrive();});window.addEventListener('blur',stopDrive);document.addEventListener('visibilitychange',()=>{if(document.hidden)stopDrive();});refresh();setInterval(refresh,2000);
   </script>
 </body>
 </html>

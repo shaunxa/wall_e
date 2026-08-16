@@ -71,6 +71,13 @@ exciting_active = False
 exciting_color_index = 0
 last_exciting_color_ms = 0
 last_exciting_eye_refresh_ms = 0
+# A browser/client can take direct control of both sensor-light assemblies.
+# Manual light control intentionally overrides the personality animation until
+# the hub program is restarted.
+manual_eyes = False
+manual_color_values = None
+manual_ultrasonic_values = None
+last_manual_eye_refresh_ms = 0
 
 
 def send(text):
@@ -118,6 +125,62 @@ def set_exciting_eyes(color_index):
         eye_mood = "excited"
     except OSError:
         pass
+
+
+def apply_manual_eyes():
+    """Refresh direct LEDs after sensor reads may have changed an emitter."""
+    try:
+        if manual_color_values is not None:
+            if any(manual_color_values):
+                color_eye.lights.on(manual_color_values)
+            else:
+                color_eye.lights.off()
+        if manual_ultrasonic_values is not None:
+            if any(manual_ultrasonic_values):
+                distance_eye.lights.on(manual_ultrasonic_values)
+            else:
+                distance_eye.lights.off()
+    except OSError:
+        pass
+
+
+def set_manual_color_lights(values):
+    """Set the Color Sensor's three individual light segments."""
+    global manual_eyes, manual_color_values, eyes_are_on
+    manual_eyes = True
+    manual_color_values = values
+    eyes_are_on = any(values)
+    apply_manual_eyes()
+
+
+def set_manual_ultrasonic_lights(values):
+    """Set the Ultrasonic Sensor's four individual LEDs."""
+    global manual_eyes, manual_ultrasonic_values, eyes_are_on
+    manual_eyes = True
+    manual_ultrasonic_values = values
+    eyes_are_on = any(values)
+    apply_manual_eyes()
+
+
+def set_manual_lights_off():
+    global manual_eyes, manual_color_values, manual_ultrasonic_values, eyes_are_on
+    manual_eyes = True
+    manual_color_values = (0, 0, 0)
+    manual_ultrasonic_values = (0, 0, 0, 0)
+    eyes_are_on = False
+    apply_manual_eyes()
+
+
+def light_values(parts, expected_count, error):
+    """Parse and clamp a fixed-size sensor-light brightness list."""
+    if len(parts) != expected_count + 1:
+        send("ERR " + error)
+        return None
+    try:
+        return tuple(clamp(int(value), 0, 100) for value in parts[1:])
+    except ValueError:
+        send("ERR " + error)
+        return None
 
 
 def set_head_target(logical_angle):
@@ -170,6 +233,33 @@ def handle_command(command):
     if parts[0] == "PING":
         send("ACK PING")
         return
+    if parts[0] == "ECHO":
+        if len(parts) < 2:
+            send("ERR invalid-echo")
+        else:
+            # Return the logical line received by the hub for BLE framing and
+            # notification-buffer diagnostics. Command input has been trimmed.
+            send("ECHO " + command[5:])
+        return
+    if parts[0] == "COLORLIGHT":
+        values = light_values(parts, 3, "invalid-colorlight")
+        if values is not None:
+            set_manual_color_lights(values)
+            send("ACK COLORLIGHT {} {} {}".format(values[0], values[1], values[2]))
+        return
+    if parts[0] == "ULTRALIGHT":
+        values = light_values(parts, 4, "invalid-ultralight")
+        if values is not None:
+            set_manual_ultrasonic_lights(values)
+            send("ACK ULTRALIGHT {} {} {} {}".format(values[0], values[1], values[2], values[3]))
+        return
+    if parts[0] == "LIGHTS":
+        if len(parts) == 2 and parts[1] == "OFF":
+            set_manual_lights_off()
+            send("ACK LIGHTS OFF")
+        else:
+            send("ERR invalid-lights")
+        return
     if parts[0] == "DRV" and len(parts) == 3:
         try:
             drive(int(parts[1]), int(parts[2]))
@@ -192,7 +282,13 @@ def animate_personality(now):
     global blink_until_ms, last_blink_ms, idle_active
     global idle_phase, idle_phase_started_ms, idle_phase_duration_ms
     global exciting_active, exciting_color_index
-    global last_exciting_color_ms, last_exciting_eye_refresh_ms
+    global last_exciting_color_ms, last_exciting_eye_refresh_ms, last_manual_eye_refresh_ms
+
+    if manual_eyes:
+        if now - last_manual_eye_refresh_ms >= EXCITING_EYE_REFRESH_MS:
+            apply_manual_eyes()
+            last_manual_eye_refresh_ms = now
+        return
 
     if wheels_moving:
         idle_active = False

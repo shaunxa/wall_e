@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Type=simple
 User=shaun
-SupplementaryGroups=bluetooth
+SupplementaryGroups=bluetooth video
 WorkingDirectory=/home/shaun/hello_ev3/rpi_yolo_webapp
 Environment=PATH=/home/shaun/hello_ev3/.venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 Environment=CAMERA_INDEX=0
