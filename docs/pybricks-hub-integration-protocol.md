@@ -69,8 +69,8 @@ Recommended UI mappings:
 | --- | --- |
 | Forward | `DRV -35 -35` |
 | Reverse | `DRV 35 35` |
-| Left | `DRV 35 -35` |
-| Right | `DRV -35 35` |
+| Left | `DRV -35 35` |
+| Right | `DRV 35 -35` |
 | Head left | `HEAD -45` |
 | Head right | `HEAD 45` |
 | Stop | `STOP` |

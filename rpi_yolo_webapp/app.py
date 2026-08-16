@@ -126,7 +126,10 @@ class PybricksBridge:
         self._update(connected=False, ready=False, name=None, address=None, status="Not connected", wheels_enabled=True)
 
     def command(self, action: str) -> dict[str, Any]:
-        commands = {"stop": ("STOP",), "left": ("DRV 35 -35",), "right": ("DRV -35 35",),
+        # The assembled Wall-E chassis turns opposite to the original logical
+        # labels for these two differential-drive pairs, so the web joystick
+        # maps left/right to the observed physical steering direction.
+        commands = {"stop": ("STOP",), "left": ("DRV -35 35",), "right": ("DRV 35 -35",),
                     "forward": ("DRV -35 -35",), "reverse": ("DRV 35 35",),
                     "ping": ("PING",), "echo": ("ECHO web-diagnostic",),
                     "eyes_awake": ("COLORLIGHT 30 30 30", "ULTRALIGHT 30 30 30 30"),
