@@ -7,10 +7,11 @@ capture pattern and is suitable for a phone-based replacement of the iOS camera
 screen.
 
 It also connects directly to the existing Wall-E Pybricks program over BLE and
-provides its supported drive and head commands in the browser. The hub retains
-the safety logic: obstacle rejection, shoulder wheel-disable switch, and the
-two-second command timeout. Keep the robot in a clear area and use **Stop**
-before handling it.
+provides a browser control deck: live video, hold-to-drive joystick, −45° to
+45° head control, hub status/telemetry, diagnostics, and sensor-eye lights.
+The hub retains the safety logic: obstacle rejection, shoulder wheel-disable
+switch, and the two-second command timeout. Keep the robot in a clear area and
+use **Stop** before handling it.
 
 ## Install on the Pi
 
@@ -37,13 +38,18 @@ errors as HTTP 503.
    permits one active host connection.
 2. Start `walle_companion_excited_eyes.py` on the hub.
 3. In the web app, select **Scan hubs**, choose the Pybricks Hub, and press
-   **Connect**. Wait for **Connected — robot ready**.
-4. Use the drive/head buttons. **Stop** remains available whenever the hub is
-   connected, including while its program is starting.
+   **Connect**.
+4. Wait for **Connected — robot ready**. Hold a direction to drive; releasing
+   it sends **Stop**. The arrow keys work as an alternative remote and
+   <kbd>Space</kbd> stops.
+5. Use the head slider for a bounded −45° to 45° target. **Ping hub** and
+   **Echo test** are safe BLE diagnostics. **Eyes awake** and **Eyes off**
+   control the Color Sensor and Ultrasonic Sensor light assemblies.
 
-The app sends the same newline-delimited `DRV`, `HEAD`, and `STOP` commands as
-the iOS app. The commands are deliberately restricted to the buttons shown in
-the web UI; arbitrary hub input is not exposed as an HTTP endpoint.
+The app sends newline-delimited `DRV`, `HEAD`, `STOP`, `PING`, `ECHO`,
+`COLORLIGHT`, `ULTRALIGHT`, and `LIGHTS OFF` commands. The commands are
+deliberately restricted to the controls shown in the web UI; arbitrary hub
+input is not exposed as an HTTP endpoint.
 
 On Debian, BLE access requires BlueZ and a user allowed to use Bluetooth:
 
@@ -53,8 +59,8 @@ sudo usermod -aG bluetooth shaun
 ```
 
 Log out and back in after changing group membership. The supplied systemd unit
-sets `SupplementaryGroups=bluetooth`; replace `shaun` with your Pi user name in
-both the unit and the command above if needed.
+sets `SupplementaryGroups=bluetooth video`; replace `shaun` with your Pi user
+name in both the unit and the command above if needed.
 
 ## Camera settings
 

@@ -47,6 +47,7 @@ class PybricksBridge:
         self._thread.start()
         self._client: BleakClient | None = None
         self._lock = threading.Lock()
+        self._command_lock = threading.Lock()
         self._stdout = bytearray()
         self._state: dict[str, Any] = {
             "connected": False, "ready": False, "name": None, "address": None,
@@ -125,12 +126,27 @@ class PybricksBridge:
         self._update(connected=False, ready=False, name=None, address=None, status="Not connected", wheels_enabled=True)
 
     def command(self, action: str) -> dict[str, Any]:
-        commands = {"stop": "STOP", "left": "DRV 35 -35", "right": "DRV -35 35",
-                    "forward": "DRV -35 -35", "reverse": "DRV 35 35",
-                    "head_left": "HEAD -45", "head_right": "HEAD 45"}
+        commands = {"stop": ("STOP",), "left": ("DRV 35 -35",), "right": ("DRV -35 35",),
+                    "forward": ("DRV -35 -35",), "reverse": ("DRV 35 35",),
+                    "ping": ("PING",), "echo": ("ECHO web-diagnostic",),
+                    "eyes_awake": ("COLORLIGHT 30 30 30", "ULTRALIGHT 30 30 30 30"),
+                    "eyes_off": ("LIGHTS OFF",)}
         if action not in commands:
             raise ValueError("Unsupported action")
-        self._call(self._send(commands[action]))
+        if action != "stop" and not self.status()["ready"]:
+            raise RuntimeError("Hub program is not ready")
+        with self._command_lock:
+            for command in commands[action]:
+                self._call(self._send(command))
+        return self.status()
+
+    def head(self, angle: int) -> dict[str, Any]:
+        if isinstance(angle, bool) or not isinstance(angle, int) or not -45 <= angle <= 45:
+            raise ValueError("Head angle must be an integer from -45 to 45")
+        if not self.status()["ready"]:
+            raise RuntimeError("Hub program is not ready")
+        with self._command_lock:
+            self._call(self._send(f"HEAD {angle}"))
         return self.status()
 
     async def _send(self, command: str) -> None:
@@ -337,6 +353,17 @@ def create_app() -> Flask:
             return jsonify(error=str(exc)), 400
         except Exception as exc:
             LOG.warning("Hub command failed: %s", exc)
+            return jsonify(error=str(exc)), 503
+
+    @app.post("/api/hub/head")
+    def hub_head():
+        angle = (request.get_json(silent=True) or {}).get("angle")
+        try:
+            return jsonify(hub=bridge.head(angle))
+        except ValueError as exc:
+            return jsonify(error=str(exc)), 400
+        except Exception as exc:
+            LOG.warning("Head command failed: %s", exc)
             return jsonify(error=str(exc)), 503
 
     return app
