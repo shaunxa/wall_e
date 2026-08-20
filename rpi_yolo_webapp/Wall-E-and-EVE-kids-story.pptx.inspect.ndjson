@@ -1,0 +1,64 @@
+{"kind":"deck","id":"pr/4tgkr9","name":"Deck"}
+{"kind":"layout","layoutId":"89dd6bd2-6674-47a4-a4e0-aff8a4cad6cf","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"07c534c9-7259-412a-8d65-1cc010df76ef","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/dp67i4","slide":1,"title":"A LITTLE ROBOT","textShapes":4}
+{"kind":"shape","id":"sh/nudgnqpc","slide":1,"bbox":[0,0,640,720]}
+{"kind":"textbox","id":"sh/mt4zel8r","slide":1,"text":"A LITTLE ROBOT\nWITH A BIG HEART","textPreview":"A LITTLE ROBOT | WITH A BIG HEART","textChars":31,"textLines":2,"bbox":[78,152,520,220]}
+{"kind":"textbox","id":"sh/x0fyt07e","slide":1,"text":"A WALL•E + EVE–inspired build story","textPreview":"A WALL•E + EVE–inspired build story","textChars":35,"textLines":1,"bbox":[80,400,480,42]}
+{"kind":"textbox","id":"sh/wz6hkvqt","slide":1,"text":"How imagination becomes a robot that can see, explore, and help.","textPreview":"How imagination becomes a robot that can see, explore, and help.","textChars":64,"textLines":1,"bbox":[80,466,460,62]}
+{"kind":"textbox","id":"sh/byxgrqp8","slide":1,"text":"Made with LEGO + Raspberry Pi + curiosity","textPreview":"Made with LEGO + Raspberry Pi + curiosity","textChars":41,"textLines":1,"bbox":[80,596,500,28]}
+{"kind":"image","id":"im/por6hwze","slide":1,"name":"","geometry":"roundRect","alt":"Original friendly robots discovering a sprout","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/dp67i4","slide":1,"text":"[Sources]\nOriginal illustration generated with OpenAI image generation, 2026-08-20. The WALL•E + EVE reference is inspiration only; no film images or characters are used."}
+{"kind":"slide","id":"sl/4fqavd","slide":2,"title":"WHY THIS MOVIE INSPIRES US","textShapes":10}
+{"kind":"shape","id":"sh/4vax0ve5","slide":2,"bbox":[70,72,1140,576]}
+{"kind":"textbox","id":"sh/3u1wrqdk","slide":2,"text":"WHY THIS MOVIE INSPIRES US","textPreview":"WHY THIS MOVIE INSPIRES US","textChars":26,"textLines":1,"bbox":[110,112,960,62]}
+{"kind":"textbox","id":"sh/itsfylwz","slide":2,"text":"It reminds us that even a small robot can notice something important.","textPreview":"It reminds us that even a small robot can notice something important.","textChars":69,"textLines":1,"bbox":[110,190,870,50]}
+{"kind":"textbox","id":"sh/dk3yx0vm","slide":2,"text":"BE CURIOUS","textPreview":"BE CURIOUS","textChars":10,"textLines":1,"bbox":[116,302,300,45]}
+{"kind":"textbox","id":"sh/sjax4veh","slide":2,"text":"Ask: “What is that?”","textPreview":"Ask: “What is that?”","textChars":20,"textLines":1,"bbox":[116,355,310,42]}
+{"kind":"textbox","id":"sh/ry1wvadw","slide":2,"text":"BE KIND","textPreview":"BE KIND","textChars":7,"textLines":1,"bbox":[484,302,300,45]}
+{"kind":"textbox","id":"sh/qxsf25wb","slide":2,"text":"Use inventions to help.","textPreview":"Use inventions to help.","textChars":23,"textLines":1,"bbox":[484,355,310,42]}
+{"kind":"textbox","id":"sh/tozelgfi","slide":2,"text":"WORK TOGETHER","textPreview":"WORK TOGETHER","textChars":13,"textLines":1,"bbox":[850,302,300,45]}
+{"kind":"textbox","id":"sh/8nqxsbex","slide":2,"text":"Great ideas need a team.","textPreview":"Great ideas need a team.","textChars":24,"textLines":1,"bbox":[850,355,300,42]}
+{"kind":"textbox","id":"sh/ito7294f","slide":2,"text":"Our robot is not a movie character. It is our own invention with the same hopeful spirit.","textPreview":"Our robot is not a movie character. It is our own invention with the same hopeful spirit.","textChars":89,"textLines":1,"bbox":[110,510,920,55]}
+{"kind":"textbox","id":"sh/juxove50","slide":2,"text":"2  •  OUR ROBOT STORY","textPreview":"2  •  OUR ROBOT STORY","textChars":21,"textLines":1,"bbox":[80,680,1120,20]}
+{"kind":"notes","id":"nt/4fqavd","slide":2,"text":"[Sources]\n[Sources]\nNo external assets. Broad themes are original wording inspired by the user's stated WALL•E movie inspiration."}
+{"kind":"slide","id":"sl/ed8uhd","slide":3,"title":"MEET OUR REAL-LIFE ROBOT","textShapes":5}
+{"kind":"textbox","id":"sh/kji5obm5","slide":3,"text":"MEET OUR REAL-LIFE ROBOT","textPreview":"MEET OUR REAL-LIFE ROBOT","textChars":24,"textLines":1,"bbox":[78,70,720,62]}
+{"kind":"textbox","id":"sh/ji94f6l0","slide":3,"text":"We built a playful robot friend with a Raspberry Pi brain and a webcam eye.","textPreview":"We built a playful robot friend with a Raspberry Pi brain and a webcam eye.","textChars":75,"textLines":1,"bbox":[80,150,510,104]}
+{"kind":"textbox","id":"sh/yhgnm14f","slide":3,"text":"It is made from LEGO parts, sensors, motors, wires… and lots of experimenting.","textPreview":"It is made from LEGO parts, sensors, motors, wires… and lots of experimenting.","textChars":78,"textLines":1,"bbox":[80,328,485,92]}
+{"kind":"shape","id":"sh/t8r6lg32","slide":3,"bbox":[78,492,460,92]}
+{"kind":"textbox","id":"sh/87i5svmh","slide":3,"text":"The best inventions begin with: “What if…?”","textPreview":"The best inventions begin with: “What if…?”","textChars":43,"textLines":1,"bbox":[106,515,405,45]}
+{"kind":"textbox","id":"sh/650nql4b","slide":3,"text":"3  •  OUR ROBOT STORY","textPreview":"3  •  OUR ROBOT STORY","textChars":21,"textLines":1,"bbox":[80,680,1120,20]}
+{"kind":"image","id":"im/a5kr2do7","slide":3,"name":"","geometry":"roundRect","alt":"User-provided photograph of the LEGO Wall-E and EVE-inspired robot","bbox":[660,52,510,606]}
+{"kind":"notes","id":"nt/ed8uhd","slide":3,"text":"[Sources]\n[Sources]\nUser-provided LEGO robot photograph, supplied in chat on 2026-08-20."}
+{"kind":"slide","id":"sl/mmq9ac","slide":4,"title":"A ROBOT MISSION:","textShapes":11}
+{"kind":"textbox","id":"sh/lc329wvu","slide":4,"text":"A ROBOT MISSION:\nNOTICE • THINK • HELP","textPreview":"A ROBOT MISSION: | NOTICE • THINK • HELP","textChars":38,"textLines":2,"bbox":[80,92,455,130]}
+{"kind":"textbox","id":"sh/0rulgre9","slide":4,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[90,270,60,56]}
+{"kind":"textbox","id":"sh/bm1k3mds","slide":4,"text":"NOTICE","textPreview":"NOTICE","textChars":6,"textLines":1,"bbox":[158,275,310,40]}
+{"kind":"textbox","id":"sh/qls3ahw7","slide":4,"text":"A camera gives the robot a view of the world.","textPreview":"A camera gives the robot a view of the world.","textChars":45,"textLines":1,"bbox":[158,320,340,62]}
+{"kind":"textbox","id":"sh/do325wvi","slide":4,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[90,414,60,56]}
+{"kind":"textbox","id":"sh/cnalcrex","slide":4,"text":"THINK","textPreview":"THINK","textChars":5,"textLines":1,"bbox":[158,419,310,40]}
+{"kind":"textbox","id":"sh/3i1kz2dg","slide":4,"text":"A tiny AI model helps spot everyday objects.","textPreview":"A tiny AI model helps spot everyday objects.","textChars":44,"textLines":1,"bbox":[158,464,340,62]}
+{"kind":"textbox","id":"sh/2hsj6xwv","slide":4,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[90,558,60,56]}
+{"kind":"textbox","id":"sh/4fm9gbu1","slide":4,"text":"HELP","textPreview":"HELP","textChars":4,"textLines":1,"bbox":[158,563,310,40]}
+{"kind":"textbox","id":"sh/5gva9gbm","slide":4,"text":"People choose what the robot does next—safely.","textPreview":"People choose what the robot does next—safely.","textChars":46,"textLines":1,"bbox":[158,608,340,46]}
+{"kind":"textbox","id":"sh/id4re1cv","slide":4,"text":"4  •  OUR ROBOT STORY","textPreview":"4  •  OUR ROBOT STORY","textChars":21,"textLines":1,"bbox":[80,680,1120,20]}
+{"kind":"image","id":"im/b2tcj2ps","slide":4,"name":"","geometry":"roundRect","alt":"Original robots sorting recycling","bbox":[570,84,640,500]}
+{"kind":"notes","id":"nt/mmq9ac","slide":4,"text":"[Sources]\n[Sources]\nOriginal illustration generated with OpenAI image generation, 2026-08-20. Technical statements describe this project’s webcam and object-detection build."}
+{"kind":"slide","id":"sl/wth81e","slide":5,"title":"TWO ROBOT","textShapes":6}
+{"kind":"shape","id":"sh/29kvqh0j","slide":5,"bbox":[62,72,540,548]}
+{"kind":"textbox","id":"sh/natwzm14","slide":5,"text":"TWO ROBOT\nSUPERPOWERS","textPreview":"TWO ROBOT | SUPERPOWERS","textChars":21,"textLines":2,"bbox":[102,118,420,120]}
+{"kind":"textbox","id":"sh/072do7id","slide":5,"text":"THE EXPLORER EYE","textPreview":"THE EXPLORER EYE","textChars":16,"textLines":1,"bbox":[104,290,360,34]}
+{"kind":"textbox","id":"sh/18bexcjy","slide":5,"text":"It looks around and notices objects.","textPreview":"It looks around and notices objects.","textChars":36,"textLines":1,"bbox":[104,335,390,54]}
+{"kind":"textbox","id":"sh/e5kvmx07","slide":5,"text":"THE HELPER HEART","textPreview":"THE HELPER HEART","textChars":16,"textLines":1,"bbox":[104,440,360,34]}
+{"kind":"textbox","id":"sh/f6twv21s","slide":5,"text":"It only moves when a person gives a safe command.","textPreview":"It only moves when a person gives a safe command.","textChars":49,"textLines":1,"bbox":[104,485,400,60]}
+{"kind":"textbox","id":"sh/s3idknih","slide":5,"text":"5  •  OUR ROBOT STORY","textPreview":"5  •  OUR ROBOT STORY","textChars":21,"textLines":1,"bbox":[80,680,1120,20]}
+{"kind":"image","id":"im/svqdcf2t","slide":5,"name":"","geometry":"roundRect","alt":"Original friendly robot companions on a hopeful Earth","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/wth81e","slide":5,"text":"[Sources]\n[Sources]\nOriginal illustration generated with OpenAI image generation, 2026-08-20. Safety wording is based on this project’s stated hub safety controls."}
+{"kind":"slide","id":"sl/bx8hky","slide":6,"title":"WHAT WILL","textShapes":3}
+{"kind":"shape","id":"sh/3mp0fi1o","slide":6,"bbox":[88,92,570,500]}
+{"kind":"textbox","id":"sh/2lgz6dk3","slide":6,"text":"WHAT WILL\nYOU BUILD?","textPreview":"WHAT WILL | YOU BUILD?","textChars":20,"textLines":2,"bbox":[132,138,430,125]}
+{"kind":"textbox","id":"sh/xcrilsjq","slide":6,"text":"A robot that helps recycle?\nA robot that explores a garden?\nA robot that makes someone smile?","textPreview":"A robot that helps recycle? | A robot that explores a garden? | A robot that makes someone smile?","textChars":93,"textLines":3,"bbox":[132,310,430,148]}
+{"kind":"textbox","id":"sh/crihc725","slide":6,"text":"Start with a question.\nThen build the answer.","textPreview":"Start with a question. | Then build the answer.","textChars":45,"textLines":2,"bbox":[132,500,390,62]}
+{"kind":"image","id":"im/58zaxszq","slide":6,"name":"","geometry":"roundRect","alt":"Original friendly robots discovering a sprout","bbox":[0,0,1280,720]}
+{"kind":"notes","id":"nt/bx8hky","slide":6,"text":"[Sources]\n[Sources]\nOriginal illustration generated with OpenAI image generation, 2026-08-20."}
