@@ -28,9 +28,33 @@ cd rpi_yolo_webapp
 On first start, Ultralytics downloads `yolov8n.pt` if it is not already in the
 current directory. For an offline Pi, copy that file beside `app.py` first.
 
-Open `http://<pi-ip-address>:5000` from a phone on the same network. The
-`/health` endpoint returns frame inference timing and reports camera/model
-errors as HTTP 503.
+## Use Wall-E Vision without an external Wi-Fi network
+
+This Pi is configured with [RaspberryConnect AccessPopup](https://github.com/RaspberryConnect/AccessPopup).
+When no known Wi-Fi network is available, it creates its own Wi-Fi access point
+so the phone can connect directly to Wall-E Vision.
+
+1. Power on the Pi and wait for the AccessPopup network to appear. If the Pi is
+   currently connected to a known network, force standalone mode with
+   `sudo accesspopup -a`.
+2. On the phone, join the configured AccessPopup SSID. A phone may warn that it
+   has no internet connection; stay connected because the Pi is providing a
+   local-only network.
+3. Open `http://192.168.50.5:5000` in the phone browser, unless the
+   AccessPopup IP was changed during its setup. Use the configured AccessPopup
+   IP in that case.
+4. Scan for and connect to the Pybricks Hub from the page.
+
+The AccessPopup defaults are SSID `AccessPopup`, password `1234567890`, and Pi
+IP `192.168.50.5`; change the default password with AccessPopup's configuration
+tool. In normal automatic mode, AccessPopup checks every two minutes for known
+Wi-Fi networks and can switch between the AP and one of those networks. A
+network switch disconnects the browser briefly, so use `sudo accesspopup -a`
+when you need a stable standalone connection.
+
+If connected through another Wi-Fi network instead, open
+`http://<pi-ip-address>:5000`. The `/health` endpoint returns frame inference
+timing and reports camera/model errors as HTTP 503.
 
 ## Connect the Pybricks Hub
 
